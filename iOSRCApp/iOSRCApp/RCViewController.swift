@@ -7,6 +7,7 @@ class RCViewController: UIViewController {
     @IBOutlet weak var coordView: UIView!
     
     @IBOutlet weak var gestures: UIPanGestureRecognizer!
+    var screenResolution: (width: Int, height: Int) = (0, 0)
     
     
     var currentRowInPicker = 0
@@ -42,8 +43,8 @@ class RCViewController: UIViewController {
     
     @IBAction func viewTapped(with: UIPanGestureRecognizer) {
         print("\(gestures.location(in: coordView).x) \(gestures.location(in: coordView).y)")
-        print("\(gestures.translation(in: UIView.init(frame: CGRect.init(x: 0, y: 0, width: 1920, height: 1080))))")
-        var point = gestures.translation(in: UIView.init(frame: CGRect.init(x: 0, y: 0, width: 1920, height: 1080)))
+        print("\(gestures.translation(in: UIView.init(frame: CGRect.init(x: 0, y: 0, width: screenResolution.width, height: screenResolution.height))))")
+        let point = gestures.translation(in: UIView.init(frame: CGRect.init(x: 0, y: 0, width: screenResolution.width, height: screenResolution.height)))
         _ = client?.send(string: "\(point.x) \(point.y)")
     }
 }

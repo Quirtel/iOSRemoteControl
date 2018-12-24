@@ -26,9 +26,20 @@ class MainViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.spinner.stopAnimating()
                     self.labelResult.isHidden = true
+                }
+                
+                 DispatchQueue.main.async {
                     let newVC = self.storyboard?.instantiateViewController(withIdentifier: "RCViewController") as! RCViewController
                     self.navigationController?.pushViewController(newVC, animated: true)
                     newVC.address = addr
+                    
+                    while true {
+                        if let screenResolutionResponse = client.read(30) {
+                            let str = String.init(bytes: screenResolutionResponse, encoding: .utf8)
+                            newVC.screenResolution.width = Int(str!.components(separatedBy: CharacterSet.init(charactersIn: " "))[0])!
+                            newVC.screenResolution.height = Int(str!.components(separatedBy: CharacterSet.init(charactersIn: " "))[1])!
+                        }
+                    }
                 }
                 
                 print("Success")
