@@ -2,13 +2,11 @@ import Foundation
 import SwiftSocket
 
 class Server {
-    var date = Date.init()
-    var formatter = DateFormatter.init()
     var testServer: TCPServer?
     var server: UDPServer?
     var isActive = false
     var currentAddress = String()
-    var currentQueue: DispatchQueue?
+    var serverQueue = DispatchQueue.init(label: "Server")
     
     var eventsQueue = DispatchQueue.init(label: "Events")
     
@@ -17,28 +15,30 @@ class Server {
     
     var prev_pos = (x: CGFloat.init(0), y: CGFloat.init(0))
     
-    init(address: String, queue: DispatchQueue) {
-        formatter.dateFormat = "dd.MM.yyyy HH:mm"
-        formatter.defaultDate = date
+    init(address: String) {
         currentAddress = address
-        currentQueue = queue
         
-        self.testServer = TCPServer(address: self.currentAddress, port: 65443)
-        server = UDPServer(address: self.currentAddress, port: 65443)
-        self.startServer()
+        testServer = TCPServer(address: address, port: 65443)
+        server = UDPServer(address: address, port: 65443)
+        
+        serverQueue.async {
+            self.startServer()
+        }
+        
         print("server on \(currentAddress) created")
     }
     
     deinit {
         self.server?.close()
-        testServer?.close()
+        self.testServer?.close()
+        
         print("server on \(currentAddress) closed")
     }
     
     func startReceiver() {
         print("Receiver started")
         
-        currentQueue?.async {
+        serverQueue.async {
             while true {
                 let result = self.server?.recv(20).0 ?? [0]
                 if result.count > 1 {
@@ -58,7 +58,7 @@ class Server {
                         click_down?.post(tap: .cghidEventTap)
                         click_up?.post(tap: .cghidEventTap)
                     }
-                }else if str == "RMB" {
+                } else if str == "RMB" {
                     self.eventsQueue.async {
                         let click_down = CGEvent.init(mouseEventSource: nil, mouseType: .rightMouseDown ,
                                                       mouseCursorPosition:
@@ -109,6 +109,13 @@ class Server {
             while true {
                 if let client = self.testServer!.accept() {
                     print("Newclient from:\(client.address)[\(client.port)]")
+                    if let screen = NSScreen.main {
+                        let rect = screen.frame
+                        let height = rect.size.height
+                        let width = rect.size.width
+                        _ = client.send(string: "\(width) \(height)")
+                    }
+                    
                     self.startReceiver()
                 } else {
                     print("accept error")

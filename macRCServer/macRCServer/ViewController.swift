@@ -7,11 +7,11 @@ class ViewController: NSViewController {
     @IBOutlet weak var addressLabel: NSTextField!
     @IBOutlet weak var turnButton: NSButton!
     
-    var currentServer = String()
+    var currentServer: String?
     var serv: Server? = nil
     var serverQueue = DispatchQueue.init(label: "Server", qos: .background)
     
-    var serversGroup = OperationQueue.init()
+    var servers: [Server] = []
     
     var queue = DispatchQueue.init(label: "Queue")
     var isActive = false
@@ -21,55 +21,51 @@ class ViewController: NSViewController {
     }
     
     @IBAction func buttonPressed(button: NSButton) {
-        if isActive {
-            queue.async {
-                    self.serv = nil
-            }
-            
-            DispatchQueue.main.async {
+        DispatchQueue.main.async {
+            if self.isActive {
+                self.serv = nil
                 self.addressLabel.stringValue = "Server is off"
                 self.turnButton.title = "Turn on remote control"
+                self.isActive = false
             }
-            isActive = false
-        } else {
-            for host in Host.current().addresses {
-                let connectionCheck = TCPClient(address: host, port: 65443)
+            else {
+                self.currentServer = self.resolveIPAddress()
                 
-                    queue.async {
-                        self.serv = Server.init(address: host, queue: self.serverQueue)
-                    }
-                
-                switch connectionCheck.connect(timeout: 5) {
-                case .success:
-                    print(host)
+                if let host = self.currentServer {
+                    self.serv = Server.init(address: host)
                     
-                    isActive = true
-                    connectionCheck.close()
-                    
-                    DispatchQueue.main.async {
-                        self.addressLabel.stringValue = "Success! IP: \(host)"
-                        self.turnButton.title = "Turn off remote control"
-                    }
-                    
-                    break
-                case .failure(let error):
-                    print("\(error), host: \(host)")
-                    
-                    queue.async {
-                        self.serv = nil
-                    }
-                    
-                    break
+                    self.addressLabel.stringValue = "Success! IP: \(host)"
+                    self.turnButton.title = "Turn off remote control"
+                    self.isActive = true
                 }
-                connectionCheck.close()
             }
         }
     }
     
-    override var representedObject: Any? {
-        didSet {
-            // Update the view, if already loaded.
+    func resolveIPAddress() -> String? {
+        for host in Host.current().addresses {
+            servers.append(Server.init(address: host))
         }
+        
+        for serv in servers {
+            let connectionCheck = TCPClient(address: serv.currentAddress, port: 65443)
+            switch connectionCheck.connect(timeout: 5) {
+            case .success:
+                print(serv.currentAddress)
+                connectionCheck.close()
+                let addr = serv.currentAddress
+                servers.removeAll()
+                return addr
+                
+            case .failure(let error):
+                print("\(error), host: \(serv.currentAddress)")
+                break
+            }
+            connectionCheck.close()
+        }
+        
+        servers.removeAll()
+        return nil
     }
 }
 

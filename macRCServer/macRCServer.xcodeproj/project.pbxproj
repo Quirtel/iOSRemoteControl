@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		07158752764A943D646BC8D3 /* Pods_macRCServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBF4B47DC308FBF0144411FD /* Pods_macRCServer.framework */; };
+		EA4A8A6D21D087E60078226C /* responses.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4A8A6C21D087E60078226C /* responses.swift */; };
 		EA81354121CA55A20099FE5B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA81354021CA55A20099FE5B /* AppDelegate.swift */; };
 		EA81354321CA55A20099FE5B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA81354221CA55A20099FE5B /* ViewController.swift */; };
 		EA81354521CA55A30099FE5B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA81354421CA55A30099FE5B /* Assets.xcassets */; };
@@ -18,6 +19,7 @@
 /* Begin PBXFileReference section */
 		0238D671C39D0CCCFDD69CD2 /* Pods-macRCServer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macRCServer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-macRCServer/Pods-macRCServer.debug.xcconfig"; sourceTree = "<group>"; };
 		CAF5A234A9783B69E5874FEB /* Pods-macRCServer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-macRCServer.release.xcconfig"; path = "Pods/Target Support Files/Pods-macRCServer/Pods-macRCServer.release.xcconfig"; sourceTree = "<group>"; };
+		EA4A8A6C21D087E60078226C /* responses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = responses.swift; sourceTree = "<group>"; };
 		EA6E041B21CA95D6000DA9E1 /* macRCServer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "macRCServer-Bridging-Header.h"; sourceTree = "<group>"; };
 		EA81353D21CA55A20099FE5B /* macRCServer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = macRCServer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA81354021CA55A20099FE5B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 			children = (
 				EA81355221CA64B00099FE5B /* GCDServer.swift */,
 				EA6E041B21CA95D6000DA9E1 /* macRCServer-Bridging-Header.h */,
+				EA4A8A6C21D087E60078226C /* responses.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA4A8A6D21D087E60078226C /* responses.swift in Sources */,
 				EA81354321CA55A20099FE5B /* ViewController.swift in Sources */,
 				EA81354121CA55A20099FE5B /* AppDelegate.swift in Sources */,
 				EA81355321CA64B00099FE5B /* GCDServer.swift in Sources */,
